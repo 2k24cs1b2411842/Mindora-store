@@ -6,7 +6,7 @@ window.MINDORA_CONFIG = {
   // Required for buyer links: your live store URL (same host as index.html / download.html).
   // Example after Render deploy: 'https://mindora-store.onrender.com'
   // Do not leave empty if you open admin.html as a local file (file://).
-  SITE_URL: '',
+  SITE_URL: 'https://mindora-store.onrender.com',
   UPI_ID: 'vermasuraj1810@oksbi',
   CURRENCY_SYMBOL: '₹'
 };
