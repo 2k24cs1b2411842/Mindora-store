@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="referrer" content="no-referrer">
+  <title>Mindora Admin</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    body {
+      background: #111820;
+      color: #f4f1eb
+    }
+
+    .admin {
+      padding: 50px 0 80px
+    }
+
+    .admin h1 {
+      font-size: clamp(42px, 6vw, 64px);
+      line-height: 1;
+      letter-spacing: -.06em;
+      margin: 0
+    }
+
+    .admin-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 20px;
+      margin-bottom: 28px
+    }
+
+    .admin-subtitle {
+      color: #b5bec6;
+      max-width: 620px
+    }
+
+    .dashboard-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin: 30px 0
+    }
+
+    .stat-card,
+    .admin-card,
+    .access-card {
+      background: #19232d;
+      border: 1px solid #2b3844;
+      border-radius: 12px
+    }
+
+    .stat-card {
+      padding: 18px
+    }
+
+    .stat-card small,
+    .admin-card small {
+      color: #9ca8b2;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      font-size: 9px
+    }
+
+    .stat-card strong {
+      display: block;
+      font-size: 28px;
+      margin-top: 7px
+    }
+
+    .admin-card {
+      padding: 24px;
+      margin: 15px 0
+    }
+
+    .admin-card h3 {
+      margin: 7px 0;
+      font-size: 21px
+    }
+
+    .admin-card p {
+      color: #b5bec6;
+      font-size: 13px;
+      margin: 5px 0
+    }
+
+    .order-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: start
+    }
+
+    .admin-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      margin-top: 20px
+    }
+
+    .data-block {
+      padding: 15px;
+      background: #111820;
+      border-radius: 8px
+    }
+
+    .data-block strong {
+      display: block;
+      margin: 7px 0;
+      font-size: 15px;
+      overflow-wrap: anywhere
+    }
+
+    .admin-btns {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 22px
+    }
+
+    .admin button {
+      border: 0;
+      border-radius: 999px;
+      padding: 11px 16px;
+      font-weight: 700;
+      cursor: pointer
+    }
+
+    .approve {
+      background: #dcecf0;
+      color: #102b3b
+    }
+
+    .reject {
+      background: #4c2930;
+      color: #ffd9dd
+    }
+
+    .logout {
+      background: #27323d;
+      color: #fff
+    }
+
+    .login {
+      max-width: 480px;
+      margin: 10vh auto
+    }
+
+    .admin input {
+      background: #10171e;
+      color: #fff;
+      border-color: #35424e
+    }
+
+    .status {
+      font-size: 11px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: #293744;
+      color: #c6d0d8;
+      white-space: nowrap
+    }
+
+    .status.submitted {
+      background: #5a4820;
+      color: #ffe6a8
+    }
+
+    .empty {
+      color: #87939d;
+      padding: 30px 0
+    }
+
+    .access-card {
+      padding: 22px;
+      margin: 20px 0;
+      background: #18302e;
+      border-color: #33665f
+    }
+
+    .access-card h2 {
+      margin: 0 0 8px
+    }
+
+    .access-url {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-top: 16px
+    }
+
+    .access-url input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 7px;
+      border: 1px solid #50877f;
+      background: #102321;
+      color: #fff;
+      min-width: 0
+    }
+
+    .access-card[hidden] {
+      display: none
+    }
+
+    @media(max-width:700px) {
+
+      .admin-grid,
+      .dashboard-stats {
+        grid-template-columns: 1fr
+      }
+
+      .admin-top,
+      .order-head {
+        align-items: start;
+        flex-direction: column
+      }
+
+      .access-url {
+        align-items: stretch;
+        flex-direction: column
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="admin container">
+    <section id="loginView" class="login">
+      <p class="eyebrow light">MINDORA ADMIN</p>
+      <h1>Orders,<br><em style="font-family:var(--serif)">verified.</em></h1>
+      <p style="color:#9ca8b2">Sign in with your authorised Supabase admin account.</p>
+      <form id="loginForm"><label>Email<input id="loginEmail" type="email" required
+            autocomplete="email"></label><label>Password<input id="loginPassword" type="password" required
+            autocomplete="current-password"></label><button class="button button-light full" type="submit">Sign in
+          →</button>
+        <div id="loginError" class="error-box" hidden></div>
+      </form>
+    </section>
+    <section id="dashboard" hidden>
+      <div class="admin-top">
+        <div>
+          <p class="eyebrow light">MINDORA ADMIN</p>
+          <h1>Payment review.</h1>
+        </div><button id="logout" class="logout">Sign out</button>
+      </div>
+      <p class="admin-subtitle">Approve only after you match the UTR and amount in your UPI or bank account. Approval
+        creates a private delivery link for that buyer.</p>
+      <div id="siteUrlWarning" class="error-box" hidden style="margin-bottom:18px"></div>
+      <div class="dashboard-stats">
+        <article class="stat-card"><small>Awaiting review</small><strong id="pendingCount">—</strong></article>
+        <article class="stat-card"><small>Total pending value</small><strong id="pendingValue">—</strong></article>
+        <article class="stat-card"><small>Review process</small><strong style="font-size:16px">UTR → match →
+            approve</strong></article>
+      </div>
+      <section id="accessCard" class="access-card" hidden>
+        <p class="eyebrow light">BUYER ACCESS CREATED</p>
+        <h2>Payment approved.</h2>
+        <p id="accessMessage">Send this private link only to the buyer. It expires after 7 days.</p>
+        <ol style="color:#b5bec6;font-size:13px;margin:14px 0 14px 18px;line-height:1.5">
+          <li>Copy the link or use <strong style="color:#dcecf0">Email buyer</strong> (WhatsApp works too — paste the same link).</li>
+          <li>The buyer opens it on your <strong style="color:#dcecf0">live website</strong> — not a file on your computer.</li>
+          <li>They tap Download; Supabase serves the PDF from a private bucket via a short-lived signed URL (10 minutes).</li>
+        </ol>
+        <div class="access-url"><input id="accessUrl" readonly aria-label="Buyer download link"><button id="copyAccess"
+            class="approve" type="button">Copy buyer link</button></div>
+        <div class="admin-btns" style="margin-top:14px">
+          <a id="emailBuyer" class="approve" href="#" hidden style="text-decoration:none;display:inline-block">Email buyer</a>
+          <a id="previewDownload" class="approve" href="#" target="_blank" rel="noopener noreferrer" hidden style="text-decoration:none;display:inline-block">Preview download page</a>
+        </div>
+      </section>
+      <section id="recentDeliveries" hidden>
+        <h2 style="font-size:22px;margin:28px 0 12px">Recent verified orders</h2>
+        <p class="admin-subtitle" style="margin-bottom:12px">Lost a link or built it with a wrong URL? Create a new buyer link here (old link stops working).</p>
+        <div id="deliveryList"></div>
+      </section>
+      <div id="orders">
+        <p class="empty">Loading payment submissions…</p>
+      </div>
+    </section>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+
+</html>
