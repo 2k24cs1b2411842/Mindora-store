@@ -23,6 +23,23 @@
   document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
 
   function showStep(n){ [1,2,3].forEach(i => $(`#checkoutStep${i}`).hidden = i !== n); $('#checkoutError').hidden = true; }
+  function showOrderId(orderNumber){
+    if(!orderNumber) return;
+    const box=$('#orderIdBox'), hint=$('#orderIdHint'), display=$('#orderIdDisplay');
+    if(hint) hint.textContent=orderNumber;
+    if(display) display.textContent=orderNumber;
+    if(box) box.hidden=false;
+  }
+  async function copyText(text, button, doneLabel='Copied'){
+    if(!text) return;
+    try{
+      await navigator.clipboard.writeText(text);
+      if(!button) return;
+      const original=button.textContent;
+      button.textContent=doneLabel;
+      setTimeout(()=>{ button.textContent=original; },1500);
+    }catch{}
+  }
   function error(msg){ const box=$('#checkoutError'); box.textContent=msg; box.hidden=false; }
   function money(amount,currency='INR'){ const symbols={INR:'₹',GBP:'£',USD:'$'}; return `${symbols[currency]||currency}${Number(amount).toFixed(0)}`; }
   function renderUpiQr(){
@@ -64,6 +81,7 @@
       const {data,error}=await sb.rpc('create_order',{p_book_id:selectedBook.id,p_customer_name:name,p_customer_email:email});
       if(error) throw error;
       selectedOrder=data;
+      showOrderId(selectedOrder.order_number);
       $('#upiAmount').textContent=money(selectedOrder.amount,selectedOrder.currency);
       renderUpiQr();
       showStep(2);
@@ -80,11 +98,15 @@
     try{
       const {data,error}=await sb.rpc('submit_payment',{p_order_id:selectedOrder.id,p_upi_id:cfg.UPI_ID,p_utr_number:utr});
       if(error) throw error;
-      $('#orderCode').textContent=`Order ${data.order_number} · Payment confirmation submitted`;
+      showOrderId(data.order_number || selectedOrder.order_number);
+      $('#orderCode').textContent='After admin verification, open Download ebook and enter this Order ID with the same email you used above.';
       showStep(3);
     }catch(err){ error(err.message || 'Could not submit payment confirmation.'); }
     finally{ button.disabled=false; button.textContent='Submit payment confirmation →'; }
   });
+
+  $('#copyOrderId')?.addEventListener('click', () => copyText($('#orderIdDisplay')?.textContent, $('#copyOrderId')));
+  $('#copyOrderIdStep2')?.addEventListener('click', () => copyText($('#orderIdHint')?.textContent, $('#copyOrderIdStep2')));
 
   loadBook();
 })();

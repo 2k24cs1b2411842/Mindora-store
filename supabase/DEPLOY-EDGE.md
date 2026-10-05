@@ -1,9 +1,9 @@
 # Deploy secure ebook download (required once)
 
-Buyers open `download.html` on your **live website**. That page calls the **`download-ebook`** Edge Function, which:
+Buyers open **`download.html`** on your live site, enter their **Order ID** (e.g. `MN-20261005-303EAE`) and **checkout email**. The page calls the **`download-ebook`** Edge Function, which:
 
-1. Checks the secret token (only a hash is stored in the database).
-2. Confirms the link is still within the 7-day window.
+1. Confirms the order is **verified** and the email matches.
+2. Confirms download access is still within the **7-day** window.
 3. Returns a **signed URL** to the PDF in the private `mindora-private` bucket (valid ~10 minutes).
 
 The PDF is never linked from the public storefront.
@@ -46,10 +46,10 @@ In SQL Editor, run (in order):
 - `supabase/migrations/20261005_fix_approve_payment_collision.sql`
 - `supabase/migrations/20261006_regenerate_buyer_download.sql`
 
-## 5. Send links to buyers
+## 5. Send details to buyers
 
-1. Open **`admin.html` on your live site** (same `SITE_URL`), not as a local `file://` page.
-2. Approve payment → copy link or **Email buyer**.
-3. Buyer opens `https://YOUR-SITE/download.html#token=…` and clicks Download.
+1. After checkout, the customer sees their **Order ID** with a **Copy** button.
+2. After you **approve** in admin, send them the Order ID (or use **Email buyer**).
+3. They open `https://YOUR-SITE/download.html`, enter Order ID + email, and tap **Get my ebook**.
 
-If a link was created with a wrong URL, use **Create new buyer link** under Recent verified orders.
+If download fails with “Could not reach the download service”, redeploy **`download-ebook`** (step 2 above).

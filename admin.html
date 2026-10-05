@@ -259,14 +259,18 @@
       <section id="accessCard" class="access-card" hidden>
         <p class="eyebrow light">BUYER ACCESS CREATED</p>
         <h2>Payment approved.</h2>
-        <p id="accessMessage">Send this private link only to the buyer. It expires after 7 days.</p>
+        <p id="accessMessage">Tell the buyer their Order ID and where to download.</p>
         <ol style="color:#b5bec6;font-size:13px;margin:14px 0 14px 18px;line-height:1.5">
-          <li>Copy the link or use <strong style="color:#dcecf0">Email buyer</strong> (WhatsApp works too — paste the same link).</li>
-          <li>The buyer opens it on your <strong style="color:#dcecf0">live website</strong> — not a file on your computer.</li>
-          <li>They tap Download; Supabase serves the PDF from a private bucket via a short-lived signed URL (10 minutes).</li>
+          <li>Send the <strong style="color:#dcecf0">Order ID</strong> and link to <strong style="color:#dcecf0">Download ebook</strong> on your site.</li>
+          <li>They enter Order ID + the <strong style="color:#dcecf0">same email</strong> used at checkout.</li>
+          <li>After verification, they get a secure PDF link from private storage (about 10 minutes per click).</li>
         </ol>
-        <div class="access-url"><input id="accessUrl" readonly aria-label="Buyer download link"><button id="copyAccess"
-            class="approve" type="button">Copy buyer link</button></div>
+        <p style="color:#9ca8b2;font-size:11px;text-transform:uppercase;letter-spacing:.12em;margin:16px 0 6px">Order ID</p>
+        <div class="access-url"><input id="accessUrl" readonly aria-label="Buyer order ID"><button id="copyAccess"
+            class="approve" type="button">Copy order ID</button></div>
+        <p style="color:#9ca8b2;font-size:11px;text-transform:uppercase;letter-spacing:.12em;margin:16px 0 6px">Download page</p>
+        <div class="access-url"><input id="accessPageUrl" readonly aria-label="Download page URL"><button id="copyAccessPage"
+            class="approve" type="button">Copy download page URL</button></div>
         <div class="admin-btns" style="margin-top:14px">
           <a id="emailBuyer" class="approve" href="#" hidden style="text-decoration:none;display:inline-block">Email buyer</a>
           <a id="previewDownload" class="approve" href="#" target="_blank" rel="noopener noreferrer" hidden style="text-decoration:none;display:inline-block">Preview download page</a>
@@ -274,7 +278,7 @@
       </section>
       <section id="recentDeliveries" hidden>
         <h2 style="font-size:22px;margin:28px 0 12px">Recent verified orders</h2>
-        <p class="admin-subtitle" style="margin-bottom:12px">Lost a link or built it with a wrong URL? Create a new buyer link here (old link stops working).</p>
+        <p class="admin-subtitle" style="margin-bottom:12px">Re-open Order ID and download page details for a verified buyer.</p>
         <div id="deliveryList"></div>
       </section>
       <div id="orders">

@@ -5,15 +5,28 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
   <meta name="referrer" content="no-referrer">
-  <title>Your ebook — Mindora</title>
+  <title>Download your ebook — Mindora</title>
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
   <main class="section container" style="max-width:760px">
     <p class="eyebrow">MINDORA · PURCHASED EBOOK</p>
-    <h1 style="font-size:clamp(44px,7vw,78px);line-height:.95;letter-spacing:-.06em">Your book is<br><em style="font-family:var(--serif)">ready.</em></h1>
-    <p id="message" style="color:var(--muted)">Checking your secure download access…</p>
-    <a id="download" class="button button-dark" hidden rel="noreferrer">Download your ebook →</a>
+    <h1 style="font-size:clamp(44px,7vw,78px);line-height:.95;letter-spacing:-.06em">Download your<br><em style="font-family:var(--serif)">ebook.</em></h1>
+    <p style="color:var(--muted);max-width:52ch">After your payment is verified, enter the <strong>Order ID</strong> from checkout and the same <strong>email</strong> you used when buying.</p>
+
+    <form id="downloadForm" class="download-form">
+      <label>Order ID
+        <input id="orderNumber" required autocomplete="off" placeholder="MN-20261005-303EAE" spellcheck="false">
+      </label>
+      <label>Email
+        <input id="customerEmail" required type="email" autocomplete="email" placeholder="you@example.com">
+      </label>
+      <button class="button button-dark full" type="submit" id="submitDownload">Get my ebook →</button>
+    </form>
+
+    <p id="message" style="color:var(--muted);margin-top:20px">Payment must be approved before download is available.</p>
+    <a id="download" class="button button-dark" hidden rel="noreferrer" download>Download PDF →</a>
+    <p style="margin-top:28px"><a class="text-link" href="index.html">← Back to Mindora</a></p>
   </main>
   <script src="js/config.js"></script>
   <script src="js/download.js"></script>

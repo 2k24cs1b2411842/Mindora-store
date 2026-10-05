@@ -942,6 +942,72 @@ input:focus {
     padding: 12px
 }
 
+.order-id-box {
+    margin: 18px 0;
+    padding: 14px;
+    background: #e9e5dc;
+    border-radius: 8px
+}
+
+.order-id-box-success {
+    background: #dfece8
+}
+
+.order-id-label {
+    display: block;
+    font-size: 10px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px
+}
+
+.order-id-line {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap
+}
+
+.order-id-line code {
+    flex: 1;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    word-break: break-all
+}
+
+.order-id-line button {
+    border: 0;
+    border-radius: 999px;
+    padding: 8px 14px;
+    font-weight: 700;
+    cursor: pointer;
+    background: #173c5e;
+    color: #fff
+}
+
+.download-form {
+    margin-top: 28px;
+    display: grid;
+    gap: 14px;
+    max-width: 420px
+}
+
+.download-form label {
+    display: grid;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600
+}
+
+.download-form input {
+    padding: 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-size: 15px
+}
+
 .error-box {
     margin-top: 18px;
     background: #f8dddd;

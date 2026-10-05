@@ -33,6 +33,7 @@
         <a href="#inside">Inside</a>
         <a href="#about">About</a>
         <a href="#faq">FAQ</a>
+        <a href="download.html">Download ebook</a>
         <a href="#book" class="nav-cta">Get the book</a>
       </div>
     </nav>
@@ -279,6 +280,11 @@
               UTR/transaction ID below.</p>
           </div>
         </div>
+        <div class="order-id-box" id="orderIdBox" hidden>
+          <span class="order-id-label">Your order ID</span>
+          <div class="order-id-line"><code id="orderIdHint"></code><button type="button" id="copyOrderIdStep2">Copy</button></div>
+          <p class="form-note" style="margin-top:8px">Keep this ID — you will need it to download after payment verification.</p>
+        </div>
         <form id="paymentForm"><label>UTR / Transaction ID<input id="utr" required maxlength="64"
               placeholder="e.g. 123456789012"></label><button class="button button-dark full" type="submit">Submit
             payment confirmation →</button>
@@ -289,8 +295,14 @@
         <div class="success-icon">✓</div>
         <p class="eyebrow">CONFIRMATION RECEIVED</p>
         <h2>You're on your way.</h2>
-        <p>We've received your payment reference. We'll verify it and create your secure ebook access.</p>
-        <p class="order-code" id="orderCode"></p><button class="button button-dark full" data-close>Done</button>
+        <p>We've received your payment reference. Once verified, download your ebook using your Order ID and email.</p>
+        <div class="order-id-box order-id-box-success">
+          <span class="order-id-label">Your order ID</span>
+          <div class="order-id-line"><code id="orderIdDisplay"></code><button type="button" id="copyOrderId">Copy ID</button></div>
+        </div>
+        <p class="form-note" id="orderCode"></p>
+        <a class="button button-dark full" href="download.html" style="margin-top:12px;text-align:center;display:block">Go to download page →</a>
+        <button class="button full" type="button" data-close style="margin-top:10px;background:transparent;border:1px solid var(--line)">Close</button>
       </div>
       <div id="checkoutError" class="error-box" hidden></div>
     </div>

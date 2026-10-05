@@ -16,38 +16,39 @@
     return null;
   }
 
-  function buyerDownloadUrl(token) {
+  function downloadPageUrl() {
     const base = resolveSiteBase();
     if (!base) {
       throw new Error(
-        'Set SITE_URL in js/config.js to your public website (https://your-site.onrender.com). ' +
-        'Buyer links cannot be built when admin is opened as a local file (file://).'
+        'Set SITE_URL in js/config.js to your public website (https://mindora-store.onrender.com).'
       );
     }
-    return `${base}/download.html#token=${token}`;
+    return `${base}/download.html`;
   }
 
-  function buildMailto(email, orderNumber, url) {
+  function buildMailto(email, orderNumber, downloadPage) {
     const subject = encodeURIComponent(`Your Mindora ebook — order ${orderNumber}`);
     const body = encodeURIComponent(
       `Hi,\n\nThank you for your purchase. Your payment is verified.\n\n` +
-      `Open this private link on your phone or computer to download your ebook (link valid 7 days):\n\n${url}\n\n` +
-      `On that page, tap Download — the file link works for about 10 minutes; you can reopen the same page anytime before it expires.\n\n` +
-      `— Mindora`
+      `1. Open: ${downloadPage}\n` +
+      `2. Enter Order ID: ${orderNumber}\n` +
+      `3. Enter the same email you used at checkout: ${email}\n\n` +
+      `Then tap Get my ebook to download your PDF.\n\n— Mindora`
     );
     return `mailto:${encodeURIComponent(email)}?subject=${subject}&body=${body}`;
   }
 
-  function showBuyerAccess({ orderNumber, customerEmail, token }) {
-    const url = buyerDownloadUrl(token);
-    $('#accessUrl').value = url;
+  function showBuyerAccess({ orderNumber, customerEmail }) {
+    const page = downloadPageUrl();
+    $('#accessUrl').value = orderNumber;
+    $('#accessPageUrl').value = page;
     $('#accessMessage').textContent =
-      `Access created for order ${orderNumber}. Send the link below only to ${customerEmail}. It expires after 7 days.`;
+      `Payment approved for ${customerEmail}. They download at your site using this Order ID and their checkout email (access for 7 days).`;
     const emailLink = $('#emailBuyer');
-    emailLink.href = buildMailto(customerEmail, orderNumber, url);
+    emailLink.href = buildMailto(customerEmail, orderNumber, page);
     emailLink.hidden = !customerEmail;
     const preview = $('#previewDownload');
-    preview.href = url;
+    preview.href = page;
     preview.hidden = false;
     $('#accessCard').hidden = false;
     $('#accessCard').scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -97,7 +98,15 @@
     if (!link) return;
     await navigator.clipboard.writeText(link);
     $('#copyAccess').textContent = 'Copied';
-    setTimeout(() => { $('#copyAccess').textContent = 'Copy buyer link'; }, 1500);
+    setTimeout(() => { $('#copyAccess').textContent = 'Copy order ID'; }, 1500);
+  });
+
+  $('#copyAccessPage')?.addEventListener('click', async () => {
+    const link = $('#accessPageUrl')?.value;
+    if (!link) return;
+    await navigator.clipboard.writeText(link);
+    $('#copyAccessPage').textContent = 'Copied';
+    setTimeout(() => { $('#copyAccessPage').textContent = 'Copy download page URL'; }, 1500);
   });
 
   async function loadOrders() {
@@ -137,34 +146,17 @@
     list.innerHTML = rows.map(order => {
       const dl = Array.isArray(order.downloads) ? order.downloads[0] : order.downloads;
       const expires = dl?.expires_at ? dateTime(dl.expires_at) : '—';
-      return `<article class="admin-card"><div class="order-head"><div><small>Order ${escapeHtml(order.order_number)}</small><h3>${escapeHtml(order.customer_name)}</h3></div><span class="status submitted">Verified</span></div><p>${escapeHtml(order.customer_email)} · access expires ${escapeHtml(expires)}</p><div class="admin-btns"><button type="button" class="approve" data-regenerate="${order.id}" data-email="${escapeHtml(order.customer_email)}" data-order="${escapeHtml(order.order_number)}">Create new buyer link</button></div></article>`;
+      return `<article class="admin-card"><div class="order-head"><div><small>Order ${escapeHtml(order.order_number)}</small><h3>${escapeHtml(order.customer_name)}</h3></div><span class="status submitted">Verified</span></div><p>${escapeHtml(order.customer_email)} · access expires ${escapeHtml(expires)}</p><div class="admin-btns"><button type="button" class="approve" data-resend data-email="${escapeHtml(order.customer_email)}" data-order="${escapeHtml(order.order_number)}">Show buyer download details</button></div></article>`;
     }).join('');
-    list.querySelectorAll('[data-regenerate]').forEach(button => {
-      button.addEventListener('click', () => regenerateBuyerLink(button));
-    });
-  }
-
-  async function regenerateBuyerLink(button) {
-    if (!confirm('Create a new private download link? The old link will stop working immediately.')) return;
-    if (!resolveSiteBase()) return alert('Set SITE_URL in js/config.js to your live website URL first.');
-    button.disabled = true;
-    button.textContent = 'Creating link…';
-    try {
-      const { data, error } = await sb.rpc('regenerate_buyer_download', { p_order_id: button.dataset.regenerate });
-      if (error) throw new Error(error.message);
-      const row = Array.isArray(data) ? data[0] : data;
-      if (!row?.download_token) throw new Error('No download token returned.');
-      showBuyerAccess({
-        orderNumber: row.order_number || button.dataset.order,
-        customerEmail: button.dataset.email,
-        token: row.download_token
+    list.querySelectorAll('[data-resend]').forEach(button => {
+      button.addEventListener('click', () => {
+        try {
+          showBuyerAccess({ orderNumber: button.dataset.order, customerEmail: button.dataset.email });
+        } catch (err) {
+          alert(err.message || 'Could not open buyer details.');
+        }
       });
-    } catch (err) {
-      alert(err.message || 'Could not create a new link.');
-    } finally {
-      button.disabled = false;
-      button.textContent = 'Create new buyer link';
-    }
+    });
   }
 
   async function reviewPayment(button) {
@@ -188,11 +180,9 @@
         const { data, error } = await sb.rpc('approve_payment', { p_order_id: orderId });
         if (error) throw new Error(error.message);
         const row = Array.isArray(data) ? data[0] : data;
-        if (!row?.download_token) throw new Error('Approval succeeded but no download token was returned. Run the latest schema fix in Supabase SQL Editor.');
         showBuyerAccess({
-          orderNumber: row.order_number || button.dataset.order,
-          customerEmail: button.dataset.email,
-          token: row.download_token
+          orderNumber: row?.order_number || button.dataset.order,
+          customerEmail: button.dataset.email
         });
       } else {
         const { error } = await sb.rpc('reject_payment', { p_order_id: orderId, p_reason: note });
